@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Car_Dealership.Models.Car>
+
+@{
+    ViewData["Title"] = "";
+}
+
+@if (User.IsInRole("1"))
+{
+    <a href="@Url.Action("Create", "Car")" class="btn btn-primary">Add a new car</a>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Manufacturer</th>
+            <th>Model</th>
+            <th>HorsePower</th>
+            <th>ProductionYear</th>
+            <th>Price</th>
+            <th>AccessLevel</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Manufacturer</td>
+                <td>@car.Model</td>
+                <td>@car.HorsePower</td>
+                <td>@car.ProductionYear</td>
+                <td>@car.Price</td>
+                <td>@car.AccessLevel</td>
+                <td>
+                    @if (User.IsInRole("1")) // Для администратора: все 3 кнопки
+                    {
+                        <a href="@Url.Action("Edit", "Car", new { id = car.Id })" class="btn btn-warning">Edit</a>
+                        <a href="@Url.Action("Delete", "Car", new { id = car.Id })" class="btn btn-danger">Delete</a>
+                    }
+                    else if (User.IsInRole("2")) // Для менеджера: только кнопка для удаления
+                    {
+                        <a href="@Url.Action("Delete", "Car", new { id = car.Id })" class="btn btn-danger">Delete</a>
+                    }
+                    else
+                    {
+                        <span>Viewing</span> <!-- Для клиентов только просмотр -->
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
